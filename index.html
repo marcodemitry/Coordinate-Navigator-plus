@@ -1,0 +1,382 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+    <meta charset="UTF-8" />
+
+    <meta name="viewport"
+        content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+
+    <meta name="theme-color" content="#061018">
+
+    <title>Coordinate Navigator</title>
+
+    <!-- PWA -->
+
+    <link rel="manifest" href="manifest.json">
+
+    <!-- App Icon -->
+
+    <link rel="icon"
+        type="image/png"
+        href="assets/app_icon_192.png">
+
+    <!-- Leaflet CSS -->
+
+    <link rel="stylesheet"
+        href="https://unpkg.com/leaflet/dist/leaflet.css" />
+
+    <!-- Main CSS -->
+
+    <link rel="stylesheet"
+        href="style.css">
+
+</head>
+
+<body>
+
+    <!-- Splash Screen -->
+
+    <div id="splash-screen">
+
+        <img src="assets/logo.png" alt="Logo">
+
+        <h1>Coordinate Navigator</h1>
+
+        <p>Professional GPS Navigation</p>
+
+    </div>
+
+    <!-- Main App -->
+
+    <div id="app">
+
+        <!-- Header -->
+
+        <header>
+
+            <div class="logo-area">
+
+                <img src="assets/logo.png" alt="Logo">
+
+                <div>
+
+                    <h1>Coordinate Navigator</h1>
+
+                    <span>Professional GPS System</span>
+
+                </div>
+
+            </div>
+
+            <div class="gps-status">
+
+                <span id="gpsAccuracy">
+
+                    GPS Accuracy: --
+
+                </span>
+
+            </div>
+
+        </header>
+
+        <!-- Coordinate Type -->
+
+        <section class="card">
+
+            <h2>Select Coordinate Type</h2>
+
+            <select id="coordType">
+
+                <option value="wgs84">
+
+                    WGS84 (Lat, Long)
+
+                </option>
+
+                <option value="dms">
+
+                    DMS (Latitude / Longitude)
+
+                </option>
+
+                <option value="utm">
+
+                    UTM 36N
+
+                </option>
+
+            </select>
+
+        </section>
+
+        <!-- WGS84 -->
+
+        <section class="card coord-box"
+            id="wgs84Box">
+
+            <h2>WGS84 Coordinates</h2>
+
+            <input type="number"
+                id="latitude"
+                placeholder="Latitude">
+
+            <input type="number"
+                id="longitude"
+                placeholder="Longitude">
+
+        </section>
+
+        <!-- DMS -->
+
+        <section class="card coord-box hidden"
+            id="dmsBox">
+
+            <h2>DMS Coordinates</h2>
+
+            <!-- Latitude -->
+
+            <div class="dms-group">
+
+                <label>
+
+                    Latitude DMS
+
+                </label>
+
+                <div class="dms-row">
+
+                    <input type="number"
+                        id="nDeg"
+                        placeholder="Deg">
+
+                    <input type="number"
+                        id="nMin"
+                        placeholder="Min">
+
+                    <input type="number"
+                        id="nSec"
+                        placeholder="Sec">
+
+                    <div class="dms-fixed">
+
+                        N
+
+                    </div>
+
+                </div>
+
+            </div>
+
+            <!-- Longitude -->
+
+            <div class="dms-group">
+
+                <label>
+
+                    Longitude DMS
+
+                </label>
+
+                <div class="dms-row">
+
+                    <input type="number"
+                        id="eDeg"
+                        placeholder="Deg">
+
+                    <input type="number"
+                        id="eMin"
+                        placeholder="Min">
+
+                    <input type="number"
+                        id="eSec"
+                        placeholder="Sec">
+
+                    <div class="dms-fixed">
+
+                        E
+
+                    </div>
+
+                </div>
+
+            </div>
+
+        </section>
+
+        <!-- UTM -->
+
+        <section class="card coord-box hidden"
+            id="utmBox">
+
+            <h2>UTM Zone 36N</h2>
+
+            <input type="number"
+                id="easting"
+                placeholder="Easting">
+
+            <input type="number"
+                id="northing"
+                placeholder="Northing">
+
+        </section>
+
+        <!-- Controls -->
+
+        <section class="card">
+
+            <button id="startBtn">
+
+                Start Navigation
+
+            </button>
+
+            <button id="stopBtn">
+
+                Stop Navigation
+
+            </button>
+
+            <button id="centerBtn">
+
+                Center On Me
+
+            </button>
+
+            <button id="clearBtn">
+
+                Clear Coordinates
+
+            </button>
+
+        </section>
+
+        <!-- Status -->
+
+        <section class="card status-card">
+
+            <div class="status-item">
+
+                <span>Distance</span>
+
+                <strong id="distanceText">
+
+                    --
+
+                </strong>
+
+            </div>
+
+            <div class="status-item">
+
+                <span>Status</span>
+
+                <strong id="statusText">
+
+                    WAITING
+
+                </strong>
+
+            </div>
+
+        </section>
+
+        <!-- Compass -->
+
+        <section class="card compass-card">
+
+            <div id="compassArrow">
+
+                ↑
+
+            </div>
+
+        </section>
+
+        <!-- Map -->
+
+        <div id="map"></div>
+
+        <!-- Footer -->
+
+        <footer>
+
+            <div class="footer-left">
+
+                <img src="assets/logo.png"
+                    alt="logo">
+
+                <div>
+
+                    <strong>
+
+                        Eng-Marco Demitry
+
+                    </strong>
+
+                    <span>
+
+                        Coordinate Navigator
+
+                    </span>
+
+                </div>
+
+            </div>
+
+            <a class="whatsapp-btn"
+                href="https://wa.me/201271985071"
+                target="_blank">
+
+                WhatsApp
+
+            </a>
+
+        </footer>
+
+    </div>
+
+    <!-- Sounds -->
+
+    <audio id="beepSound"
+        src="sounds/beep.mp3"></audio>
+
+    <audio id="nearSound"
+        src="sounds/near.mp3"></audio>
+
+    <audio id="arrivedSound"
+        src="sounds/arrived.mp3"></audio>
+
+    <!-- Leaflet -->
+
+    <script src="https://unpkg.com/leaflet/dist/leaflet.js"></script>
+
+    <!-- Main JS -->
+
+    <script src="app.js"></script>
+
+    <script src="gps.js"></script>
+
+    <script src="map.js"></script>
+
+    <script src="voice.js"></script>
+
+    <!-- Service Worker -->
+
+    <script>
+
+        if("serviceWorker" in navigator){
+
+            navigator.serviceWorker.register(
+                "service-worker.js"
+            );
+
+        }
+
+    </script>
+
+</body>
+
+</html>
